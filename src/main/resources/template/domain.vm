@@ -1,0 +1,28 @@
+package ${meta.mapperInterfacePackageName}.entities;
+
+import java.io.Serializable;
+
+public class ${meta.domainClassName} implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	#foreach( ${col} in ${meta.cols} )
+/**${col.colDesc}*/
+	private ${col.colType} ${col.fieldName};  
+	
+	#end
+	
+	
+	#foreach( ${col} in ${meta.cols} )
+
+	public void ${col.seOperName}(${col.colType} ${col.fieldName}){
+		this.${col.fieldName}=${col.fieldName};
+	}
+	
+	public ${col.colType} ${col.geOperName}(){
+		return this.${col.fieldName};
+	}
+	
+	#end
+	
+}

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="${meta.mapperInterfacePackageName}.mappers.${meta.mapperInterfaceClassName}">
+	
+	<resultMap id="${meta.domainClassName}" type="${meta.mapperInterfacePackageName}.entities.${meta.domainClassName}">
+		#foreach( ${col} in ${meta.cols} )<result property="${col.fieldName}" column="${col.colName}" />
+		#end
+
+	</resultMap>
+
+
+    <select id="queryByPrimaryKey" resultType="${meta.mapperInterfacePackageName}.entities.${meta.domainClassName}">
+        select #set($temp = 1)
+
+	#foreach(${col} in ${meta.cols})
+		${col.colName} as '${col.fieldName}'#if($temp < $meta.cols.size()),#set($temp = $temp + 1)
+
+	#end
+#end
+
+        from ${meta.tableName}
+        where #set($temp=0)
+
+#foreach(${col} in ${meta.cols})
+	#if($col.isPkFlag())
+		#if($temp >0) and #end ${col.colName} = #{${col.fieldName}}
+		#set($temp=$temp+1)
+	#end
+#end
+
+    </select>
+
+
+
+
+    <select id="querySelective" resultType="${meta.mapperInterfacePackageName}.entities.${meta.domainClassName}" parameterType="${meta.mapperInterfacePackageName}.entities.${meta.domainClassName}">
+        select #set($temp = 1)
+
+	#foreach(${col} in ${meta.cols})
+		${col.colName} as '${col.fieldName}'#if($temp < $meta.cols.size()),#set($temp = $temp + 1)
+
+	#end
+#end
+
+        from ${meta.tableName}
+        <where>
+			#foreach(${col} in ${meta.cols})<if test="${col.fieldName} != null">and ${col.colName} = #{${col.fieldName}}</if>
+			#end
+
+        </where>
+    </select>
+
+
+    <select id="countSelective" resultType="int" parameterType="${meta.mapperInterfacePackageName}.entities.${meta.domainClassName}">
+        select
+        	count(*)
+        from ${meta.tableName}
+        <where>
+			#foreach(${col} in ${meta.cols})<if test="${col.fieldName} != null">and ${col.colName} = #{${col.fieldName}}</if>
+			#end
+
+        </where>
+    </select>
+
+
+    <insert id="insert" parameterType="${meta.mapperInterfacePackageName}.entities.${meta.domainClassName}" #if (${meta.oneNumberPrimarykey}==true) useGeneratedKeys="true" keyProperty="${meta.primarykeycolumn}" #end>
+        insert into ${meta.tableName}
+        (#set($temp = 1)
+
+	#foreach(${col} in ${meta.cols})
+		${col.colName}#if($temp < $meta.cols.size()),#set($temp = $temp + 1)
+
+	#end
+#end
+
+        )
+        values
+		(#set($temp = 1)
+
+	#foreach(${col} in ${meta.cols})
+        #{${col.fieldName}}#if($temp < $meta.cols.size()),#set($temp = $temp + 1)
+
+	#end
+#end
+
+        )
+    </insert>
+
+
+    <insert id="insertBatch" >
+        insert into ${meta.tableName}
+		(#set($temp = 1)
+
+	#foreach(${col} in ${meta.cols})
+		${col.colName}#if($temp < $meta.cols.size()),#set($temp = $temp + 1)
+
+	#end
+#end
+
+		)
+        values
+        <foreach collection="recordList" index="index" item="item" separator="," >
+		(#set($temp = 1)
+
+	#foreach(${col} in ${meta.cols})
+		#{item.${col.fieldName}}#if($temp < $meta.cols.size()),#set($temp = $temp + 1)
+
+	#end
+#end
+
+		)
+        </foreach>
+    </insert>
+	
+
+	<update id="updateByPrimaryKey" parameterType="${meta.mapperInterfacePackageName}.entities.${meta.domainClassName}">
+		update ${meta.tableName}
+		<set>
+			#foreach(${col} in ${meta.cols})<if test="${col.fieldName} != null">${col.colName} = #{${col.fieldName}},</if>
+			#end
+
+		</set>
+		where #set($temp=0)
+
+#foreach(${col} in ${meta.cols})
+	#if($col.isPkFlag())
+		#if($temp >0) and #end ${col.colName} = #{${col.fieldName}}
+		#set($temp=$temp+1)
+	#end
+#end
+
+	</update>
+
+</mapper>

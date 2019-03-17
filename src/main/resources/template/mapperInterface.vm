@@ -1,0 +1,23 @@
+package ${meta.mapperInterfacePackageName}.mappers;
+
+import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import ${meta.mapperInterfacePackageName}.entities.${meta.domainClassName};
+
+@Mapper
+public interface ${meta.mapperInterfaceClassName} {
+
+	${meta.domainClassName} queryByPrimaryKey(#set($temp=0)#foreach(${col}in${meta.cols})#if($col.isPkFlag())#if($temp >0),#end @Param("${col.fieldName}")${col.colType} ${col.fieldName}#set($temp=$temp+1)#end#end);
+
+	List<${meta.domainClassName}> querySelective(${meta.domainClassName} record);
+
+	int insert(${meta.domainClassName} record);
+
+	int insertBatch(@Param("recordList")List<${meta.domainClassName}> recordList);
+
+	int countSelective(${meta.domainClassName} record);
+
+	int updateByPrimaryKey(${meta.domainClassName} record);
+
+}
