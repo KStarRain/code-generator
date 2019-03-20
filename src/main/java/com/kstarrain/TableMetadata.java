@@ -67,9 +67,9 @@ public class TableMetadata {
 			} else {
 				ct = TYPE_DECIMAL;
 			}
-		}  else if ("TINYINT".equals(colType)) {
+		} else if ("TINYINT".equals(colType)) {
 			ct = TYPE_INTEGER;
-		}  else if ("BIGINT".equals(colType)) {
+		} else if ("BIGINT".equals(colType)) {
 			ct = TYPE_LONG;
 		} else if ("BIT".equals(colType)) {
 			ct = TYPE_BOOLEAN;
