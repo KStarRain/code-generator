@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableMetadata {
-	private static final String TYPE_FLOAT = "java.math.BigDecimal";
+	private static final String TYPE_DECIMAL = "java.math.BigDecimal";
 	private static final String TYPE_INTEGER = "Integer";
 	private static final String TYPE_LONG = "Long";
 	private static final String TYPE_STRING = "String";
+	private static final String TYPE_BOOLEAN = "Boolean";
 
 	private List<ColomnMetadata> cols = new ArrayList<ColomnMetadata>();
 
@@ -64,10 +65,14 @@ public class TableMetadata {
 					ct = TYPE_INTEGER;
 				}
 			} else {
-				ct = TYPE_FLOAT;
+				ct = TYPE_DECIMAL;
 			}
-		} else if ("BIGINT".equals(colType)) {
+		}  else if ("TINYINT".equals(colType)) {
+			ct = TYPE_INTEGER;
+		}  else if ("BIGINT".equals(colType)) {
 			ct = TYPE_LONG;
+		} else if ("BIT".equals(colType)) {
+			ct = TYPE_BOOLEAN;
 		} else if ("INTEGER".equals(colType) || "SMALLINT".equals(colType)) {
 			ct = TYPE_INTEGER;
 		} else if ("DATE".equals(colType) || "TIMESTAMP".equals(colType)|| "DATETIME".equals(colType)) {
