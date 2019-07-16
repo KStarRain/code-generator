@@ -1,26 +1,29 @@
-package ${meta.mapperInterfacePackageName}.entities;
+package ${table.entityPackageName}.entities;
 
 import java.io.Serializable;
+#foreach(${typeImport} in ${table.typeImportList})
+import ${typeImport};
+#end
 
-public class ${meta.domainClassName} implements Serializable{
+public class ${table.entityClassName} implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	#foreach( ${col} in ${meta.cols} )
-/**${col.colDesc}*/
-	private ${col.colType} ${col.fieldName};  
+	#foreach( ${column} in ${table.columnList} )
+/**${column.columnRemarks}*/
+	private ${column.javaType} ${column.fieldName};
 	
 	#end
 	
 	
-	#foreach( ${col} in ${meta.cols} )
+	#foreach( ${column} in ${meta.columnList} )
 
-	public void ${col.seOperName}(${col.colType} ${col.fieldName}){
-		this.${col.fieldName}=${col.fieldName};
+	public void ${column.setterName}(${column.javaType} ${column.fieldName}){
+		this.${column.fieldName}=${column.fieldName};
 	}
 	
-	public ${col.colType} ${col.geOperName}(){
-		return this.${col.fieldName};
+	public ${column.javaType} ${column.getterName}(){
+		return this.${column.fieldName};
 	}
 	
 	#end

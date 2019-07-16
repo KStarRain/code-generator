@@ -1,23 +1,187 @@
-package ${meta.mapperInterfacePackageName}.mappers;
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import ${meta.mapperInterfacePackageName}.entities.${meta.domainClassName};
+<mapper namespace="${table.mapperPackageName}.${table.mapperClassName}">
+	
+	<resultMap id="BaseResultMap" type="${table.entityPackageName}.${table.entityClassName}">
+		#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+	<id column="${column.columnName}" property="${column.fieldName}" />
+#else
+			<result column="${column.columnName}" property="${column.fieldName}" />
+#end
+#end
+	</resultMap>
 
-@Mapper
-public interface ${meta.mapperInterfaceClassName} {
 
-	${meta.domainClassName} queryByPrimaryKey(#set($temp=0)#foreach(${col}in${meta.cols})#if($col.isPkFlag())#if($temp >0),#end @Param("${col.fieldName}")${col.colType} ${col.fieldName}#set($temp=$temp+1)#end#end);
+    <sql id="Base_Column_List" >
+#set($temp = 1)
+#foreach(${column} in ${table.columnList})
+            ${column.columnName}#if($temp < $table.columnList.size()),
+#set($temp = $temp + 1)
+#end
+#end
 
-	List<${meta.domainClassName}> querySelective(${meta.domainClassName} record);
+    </sql
 
-	int insert(${meta.domainClassName} record);
 
-	int insertBatch(@Param("recordList")List<${meta.domainClassName}> recordList);
+    <sql id="Base_Selective_Where" >
+#foreach(${column} in ${table.columnList})
+		<if test="${column.columnName} != null#if($column.javaType != "Date" && $column.javaType != "java.util.Date" && $column.javaType != "Integer" && $column.javaType != "java.lang.Integer") and ${column.fieldName} != ''#end">and ${column.columnName} = #{${column.fieldName}}</if>
+#end
+    </sql>
 
-	int countSelective(${meta.domainClassName} record);
 
-	int updateByPrimaryKey(${meta.domainClassName} record);
+    <insert id="insert" parameterType="${table.entityPackageName}.${table.entityClassName}" #if(${table.oneNumberPrimarykey}==true)keyProperty="${table.primarykeycolumn}" useGeneratedKeys="true"#end>
+        insert into ${table.tableName}
+			(
+        	<include refid="Base_Column_List" />
+###set($temp = 1)
+##	#foreach(${column} in ${table.columnList})
+##		${column.columnName}#if($temp < $table.columnList.size()),#set($temp = $temp + 1)
+##
+##	#end
+###end
+        	)
+        values
+			(#set($temp = 1)
 
-}
+	#foreach(${column} in ${table.columnList})
+        #{${column.fieldName}}#if($temp < $table.columnList.size()),#set($temp = $temp + 1)
+
+	#end
+#end
+
+        	)
+    </insert>
+##
+##
+##    <insert id="insertSelective" parameterType="${table.entityPackageName}.${table.entityClassName}" >
+##        insert into ${table.name}
+##        <trim prefix="(" suffix=")" suffixOverrides="," >
+###foreach(${column} in ${table.columnList})
+##			<if test="${column.fieldName} != null" >${column.name}, </if>
+###end
+##        </trim>
+##        <trim prefix="values (" suffix=")" suffixOverrides="," >
+###foreach( ${column} in ${table.columnList} )
+##			<if test="${column.fieldName} != null" >#{${column.fieldName}}, </if>
+###end
+##        </trim>
+##    </insert>
+
+	
+    <insert id="insertBatch" >
+        insert into ${table.tableName}
+			(
+			<include refid="Base_Column_List" />
+			)
+        values
+			<foreach collection="recordList" index="index" item="item" separator="," >
+			(#set($temp = 1)
+
+	#foreach(${column} in ${table.columnList})
+		#{item.${column.fieldName}}#if($temp < $table.columnList.size()),#set($temp = $temp + 1)
+
+	#end
+#end
+
+			)
+			</foreach>
+    </insert>
+
+
+    <delete id="deleteByPrimaryKey" >
+        delete from
+			${table.tableName}
+        where #set($temp=0)
+
+#foreach(${column} in ${table.columnList})
+#if($column.isPrimaryKey())
+		   #if($temp >0) and #end ${column.columnName} = #{${column.fieldName}}
+#set($temp=$temp+1)
+#end
+#end
+    </delete>
+
+	
+	<update id="updateByPrimaryKey">
+        update
+			${table.tableName}
+		set
+#set($temp = 1)#foreach(${column} in ${table.columnList})
+	    	${column.columnName} = #{${column.fieldName}}#if($temp < $table.columnList.size()),
+#set($temp = $temp + 1)
+#end
+#end
+
+        where #set($temp=0)
+
+#foreach(${column} in ${table.columnList})
+#if($column.isPrimaryKey())
+	       #if($temp >0) and #end ${column.columnName} = #{${column.fieldName}}
+#set($temp=$temp+1)
+#end
+#end
+    </update>
+
+
+	<update id="updateByPrimaryKeySelective">
+		update
+			${table.tableName}
+		<set>
+#foreach(${column} in ${table.columnList})
+			<if test="${column.fieldName} != null">${column.columnName} = #{${column.fieldName}},</if>
+#end
+		</set>
+        where #set($temp=0)
+
+#foreach(${column} in ${table.columnList})
+#if($column.isPrimaryKey())
+		   #if($temp >0) and #end ${column.columnName} = #{${column.fieldName}}
+#set($temp=$temp+1)
+#end
+#end
+	</update>
+
+
+    <select id="countSelective" resultType="int" parameterType="${table.entityPackageName}.${table.entityClassName}">
+        select
+        	count(1)
+        from
+			${table.tableName}
+        <where>
+            <include refid="Base_Selective_Where" />
+        </where>
+    </select>
+	
+
+    <select id="queryByPrimaryKey" resultMap="BaseResultMap">
+        select
+        	<include refid="Base_Column_List" />
+        from
+			${table.tableName}
+        where #set($temp=0)
+
+#foreach(${column} in ${table.columnList})
+#if($column.isPrimaryKey())
+	       #if($temp >0) and #end ${column.columnName} = #{${column.fieldName}}
+#set($temp=$temp+1)
+#end
+#end
+	</select>
+
+
+    <select id="querySelective" resultMap="BaseResultMap" parameterType="${table.entityPackageName}.${table.entityClassName}">
+        select
+        	<include refid="Base_Column_List" />
+        from
+			${table.tableName}
+        <where>
+            <include refid="Base_Selective_Where" />
+##			#foreach(${column} in ${table.columnList})<if test="${column.fieldName} != null">and ${column.columnName} = #{${column.fieldName}}</if>
+##			#end
+        </where>
+    </select>
+
+</mapper>

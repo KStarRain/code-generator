@@ -1,67 +1,56 @@
 package com.kstarrain;
 
 public class ColomnMetadata {
-	private String colName;
-	private String colDesc;
-	private String colType;
+	private String columnName;
+	private String columnRemarks;
+	private String javaType;
 	private String fieldName;
-	private String length;
-	private String colDBType;
-	private String seOperName;
-	private String geOperName;
+	private String columnSize;
+	private String columnType;
+	private String setterName;
+	private String getterName;
 	private Boolean isNumber;
+	private boolean primaryKey;
 
-	private boolean pkFlag;
 
-	public boolean isPkFlag() {
-		return pkFlag;
+
+	public String getSetterName() {
+		return setterName;
 	}
 
-	public void setPkFlag(boolean pkFlag) {
-		this.pkFlag = pkFlag;
+	public void setSetterName(String setterName) {
+		this.setterName = setterName;
 	}
 
-	public String getGeOperName() {
-		return geOperName;
+	public String getGetterName() {
+		return getterName;
 	}
 
-	public void setGeOperName(String geOperName) {
-		this.geOperName = geOperName;
+	public void setGetterName(String getterName) {
+		this.getterName = getterName;
 	}
 
-	public String getSeOperName() {
-		return seOperName;
+	public String getColumnName() {
+		return columnName;
 	}
 
-	public void setSeOperName(String seOperName) {
-		this.seOperName = seOperName;
-	}
-
-	public String getColName() {
-		return colName;
-	}
-
-	public void setColName(String colName) {
-		this.colName = colName;
-
-		String fn = NameParser.capitalize(colName, false);
-		String fnS = "set" + Character.toUpperCase(fn.charAt(0))
-				+ fn.substring(1);
-		String fnG = "get" + Character.toUpperCase(fn.charAt(0))
-				+ fn.substring(1);
-		this.setFieldName(fn);
-		this.setSeOperName(fnS);
-		this.setGeOperName(fnG);
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+		String fieldName = NameParser.capitalize(columnName, false);
+		String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+		String getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+		this.setFieldName(fieldName);
+		this.setSetterName(setterName);
+		this.setGetterName(getterName);
 
 	}
 
-	public String getColType() {
-		return colType;
+	public String getColumnType() {
+		return columnType;
 	}
 
-	public void setColType(String colType) {
-
-		this.colType = colType;
+	public void setColumnType(String columnType) {
+		this.columnType = columnType;
 	}
 
 	public String getFieldName() {
@@ -72,30 +61,29 @@ public class ColomnMetadata {
 		this.fieldName = fieldName;
 	}
 
-	public String getColDesc() {
-		return colDesc;
+	public String getColumnRemarks() {
+		return columnRemarks;
 	}
 
-	public void setColDesc(String colDesc) {
-		this.colDesc = colDesc;
+	public void setColumnRemarks(String columnRemarks) {
+		this.columnRemarks = columnRemarks;
 	}
 
-	public String getLength() {
-		return length;
+	public String getColumnSize() {
+		return columnSize;
 	}
 
-	public void setLength(String length) {
-		this.length = length;
+	public void setColumnSize(String columnSize) {
+		this.columnSize = columnSize;
 	}
 
-	public String getColDBType() {
-		return colDBType;
+	public String getJavaType() {
+		return javaType;
 	}
 
-	public void setColDBType(String colDBType) {
-		this.colDBType = colDBType;
+	public void setJavaType(String javaType) {
+		this.javaType = javaType;
 	}
-	
 
 	public Boolean getIsNumber() {
 		return isNumber;
@@ -105,7 +93,15 @@ public class ColomnMetadata {
 		this.isNumber = isNumber;
 	}
 
+	public boolean isPrimaryKey() {
+		return primaryKey;
+	}
+
+	public void setPrimaryKey(boolean primaryKey) {
+		this.primaryKey = primaryKey;
+	}
+
 	public String toString() {
-		return this.getColName() + "<" + this.getColDesc() + ">";
+		return this.getColumnName() + "<" + this.getColumnRemarks() + ">";
 	}
 }

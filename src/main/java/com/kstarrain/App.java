@@ -45,24 +45,24 @@ public class App {
 		String projectPackage = config.getProperty("projectPackage");
 		VelocityContext context = new VelocityContext();
 
-		String[] templates = { "template/domain.vm", "template/mapper_java.vm", "template/mapper_xml.vm"};
+		String[] templates = { "template/domain.vm", "template/mapper_xml.vm", "template/mapper_java.vm"};
 		String[] paths = { "persistence/entities","persistence/mappers", "persistence/mappers"};
 		String[] fileNames = { ".java","Mapper.xml", "Mapper.java"};
 
 		List<TableMetadata> tables = DatabaseMetaQuery.getTableMetas();
 		for (TableMetadata table : tables) {
 
-			context.put("meta", table);
+			context.put("table", table);
 			for (int i = 0; i < templates.length; i++) {
 				String pathStr = paths[i];
-				String outPath = outputPath + projectPackage.replace(".", fileSeparator) + "/" + pathStr + "/";
+				String outPath = outputPath + "/" + pathStr + "/";
 
 				File file = new File(outPath);
 				if (!file.exists()) {file.mkdirs();}
 
 				Template template = Velocity.getTemplate(templates[i]);
 				template.setEncoding("utf-8");
-				String fileName = outPath + table.getDomainClassName() + fileNames[i];
+				String fileName = outPath + table.getEntityClassName() + fileNames[i];
 				writeFiles(template, context, fileName);
 				System.out.println("write File: " + fileName);
 			}
