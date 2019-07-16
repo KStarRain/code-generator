@@ -42,7 +42,7 @@ public class App {
 		if (outputPath == null || outputPath.trim().equals("")) {
 			outputPath = path + "output/";
 		}
-		String projectPackage = config.getProperty("projectPackage");
+//		String projectPackage = config.getProperty("projectPackage");
 		VelocityContext context = new VelocityContext();
 
 		String[] templates = { "template/domain.vm", "template/mapper_xml.vm", "template/mapper_java.vm"};
