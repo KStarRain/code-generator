@@ -22,18 +22,18 @@
 #end
 #end
 
-    </sql
+    </sql>
 
 
     <sql id="Base_Selective_Where" >
 #foreach(${column} in ${table.columnList})
-		<if test="${column.columnName} != null#if($column.javaType != "Date" && $column.javaType != "java.util.Date" && $column.javaType != "Integer" && $column.javaType != "java.lang.Integer") and ${column.fieldName} != ''#end">and ${column.columnName} = #{${column.fieldName}}</if>
+		<if test="${column.fieldName} != null#if($column.javaType != "Date" && $column.javaType != "java.util.Date" && $column.javaType != "Integer" && $column.javaType != "java.lang.Integer") and ${column.fieldName} != ''#end">AND ${column.columnName} = #{${column.fieldName}}</if>
 #end
     </sql>
 
 
     <insert id="insert" parameterType="${table.entityPackageName}.${table.entityClassName}" #if(${table.oneNumberPrimarykey}==true)keyProperty="${table.primarykeycolumn}" useGeneratedKeys="true"#end>
-        insert into ${table.tableName}
+        INSERT INTO ${table.tableName}
 			(
         	<include refid="Base_Column_List" />
 ###set($temp = 1)
@@ -43,7 +43,7 @@
 ##	#end
 ###end
         	)
-        values
+        VALUES
 			(#set($temp = 1)
 
 	#foreach(${column} in ${table.columnList})
@@ -72,11 +72,11 @@
 
 	
     <insert id="insertBatch" >
-        insert into ${table.tableName}
+        INSERT INTO ${table.tableName}
 			(
 			<include refid="Base_Column_List" />
 			)
-        values
+        VALUES
 			<foreach collection="recordList" index="index" item="item" separator="," >
 			(#set($temp = 1)
 
@@ -92,9 +92,9 @@
 
 
     <delete id="deleteByPrimaryKey" >
-        delete from
+        DELETE FROM
 			${table.tableName}
-        where #set($temp=0)
+        WHERE #set($temp=0)
 
 #foreach(${column} in ${table.columnList})
 #if($column.isPrimaryKey())
@@ -105,17 +105,17 @@
     </delete>
 
 	
-	<update id="updateByPrimaryKey">
-        update
+	<update id="updateByPrimaryKey" parameterType="${table.entityPackageName}.${table.entityClassName}">
+        UPDATE
 			${table.tableName}
-		set
+		SET
 #set($temp = 1)#foreach(${column} in ${table.columnList})
 	    	${column.columnName} = #{${column.fieldName}}#if($temp < $table.columnList.size()),
 #set($temp = $temp + 1)
 #end
 #end
 
-        where #set($temp=0)
+        WHERE #set($temp=0)
 
 #foreach(${column} in ${table.columnList})
 #if($column.isPrimaryKey())
@@ -126,15 +126,15 @@
     </update>
 
 
-	<update id="updateByPrimaryKeySelective">
-		update
+	<update id="updateByPrimaryKeySelective" parameterType="${table.entityPackageName}.${table.entityClassName}">
+		UPDATE
 			${table.tableName}
 		<set>
 #foreach(${column} in ${table.columnList})
 			<if test="${column.fieldName} != null">${column.columnName} = #{${column.fieldName}},</if>
 #end
 		</set>
-        where #set($temp=0)
+        WHERE #set($temp=0)
 
 #foreach(${column} in ${table.columnList})
 #if($column.isPrimaryKey())
@@ -145,10 +145,10 @@
 	</update>
 
 
-    <select id="countSelective" resultType="int" parameterType="${table.entityPackageName}.${table.entityClassName}">
-        select
+    <select id="countSelective" parameterType="${table.entityPackageName}.${table.entityClassName}" resultType="int">
+        SELECT
         	count(1)
-        from
+        FROM
 			${table.tableName}
         <where>
             <include refid="Base_Selective_Where" />
@@ -157,11 +157,11 @@
 	
 
     <select id="queryByPrimaryKey" resultMap="BaseResultMap">
-        select
+        SELECT
         	<include refid="Base_Column_List" />
-        from
+        FROM
 			${table.tableName}
-        where #set($temp=0)
+        WHERE #set($temp=0)
 
 #foreach(${column} in ${table.columnList})
 #if($column.isPrimaryKey())
@@ -172,10 +172,10 @@
 	</select>
 
 
-    <select id="querySelective" resultMap="BaseResultMap" parameterType="${table.entityPackageName}.${table.entityClassName}">
-        select
+    <select id="querySelective" parameterType="${table.entityPackageName}.${table.entityClassName}" resultMap="BaseResultMap">
+        SELECT
         	<include refid="Base_Column_List" />
-        from
+        FROM
 			${table.tableName}
         <where>
             <include refid="Base_Selective_Where" />

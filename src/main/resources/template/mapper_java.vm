@@ -17,9 +17,9 @@ public interface ${table.mapperClassName} {
 
 	int deleteByPrimaryKey(#set($temp=0)#foreach(${column}in${table.columnList})#if($column.isPrimaryKey())#if($temp >0),#end#set($temp=$temp+1)@Param("${column.fieldName}")${column.javaType} ${column.fieldName}#end#end);
 
-	int updateByPrimaryKey(#set($temp=0)#foreach(${column}in${table.columnList})#if($column.isPrimaryKey())#if($temp >0),#end#set($temp=$temp+1)@Param("${column.fieldName}")${column.javaType} ${column.fieldName}#end#end);
+	int updateByPrimaryKey(${table.entityClassName} record);
 
-	int updateByPrimaryKeySelective(#set($temp=0)#foreach(${column}in${table.columnList})#if($column.isPrimaryKey())#if($temp >0),#end#set($temp=$temp+1)@Param("${column.fieldName}")${column.javaType} ${column.fieldName}#end#end);
+	int updateByPrimaryKeySelective(${table.entityClassName} record);
 
 	int countSelective(${table.entityClassName} record);
 

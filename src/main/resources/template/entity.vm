@@ -1,10 +1,12 @@
-package ${table.entityPackageName}.entities;
+package ${table.entityPackageName};
 
+import lombok.Data;
 import java.io.Serializable;
 #foreach(${typeImport} in ${table.typeImportList})
 import ${typeImport};
 #end
 
+@Data
 public class ${table.entityClassName} implements Serializable{
 
 	private static final long serialVersionUID = 1L;

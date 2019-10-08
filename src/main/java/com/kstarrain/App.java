@@ -45,7 +45,7 @@ public class App {
 //		String projectPackage = config.getProperty("projectPackage");
 		VelocityContext context = new VelocityContext();
 
-		String[] templates = { "template/domain.vm", "template/mapper_xml.vm", "template/mapper_java.vm"};
+		String[] templates = {"template/entity.vm", "template/mapper_xml.vm", "template/mapper_java.vm"};
 		String[] paths = { "persistence/entities","persistence/mappers", "persistence/mappers"};
 		String[] fileNames = { ".java","Mapper.xml", "Mapper.java"};
 
