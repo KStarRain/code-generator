@@ -54,21 +54,21 @@
 
         	)
     </insert>
-##
-##
-##    <insert id="insertSelective" parameterType="${table.entityPackageName}.${table.entityClassName}" >
-##        insert into ${table.name}
-##        <trim prefix="(" suffix=")" suffixOverrides="," >
-###foreach(${column} in ${table.columnList})
-##			<if test="${column.fieldName} != null" >${column.name}, </if>
-###end
-##        </trim>
-##        <trim prefix="values (" suffix=")" suffixOverrides="," >
-###foreach( ${column} in ${table.columnList} )
-##			<if test="${column.fieldName} != null" >#{${column.fieldName}}, </if>
-###end
-##        </trim>
-##    </insert>
+
+
+    <insert id="insertSelective" parameterType="${table.entityPackageName}.${table.entityClassName}"  #if(${table.oneNumberPrimarykey}==true)keyProperty="${table.primarykeycolumn}" useGeneratedKeys="true"#end>
+        insert into ${table.tableName}
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+#foreach(${column} in ${table.columnList})
+			<if test="${column.fieldName} != null" >${column.columnName}, </if>
+#end
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+#foreach( ${column} in ${table.columnList} )
+			<if test="${column.fieldName} != null" >#{${column.fieldName}}, </if>
+#end
+        </trim>
+    </insert>
 
 	
     <insert id="insertBatch" >

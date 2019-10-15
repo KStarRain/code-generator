@@ -10,8 +10,8 @@ import java.util.List;
 public interface ${table.mapperClassName} {
 
 	int insert(${table.entityClassName} record);
-##
-##	int insertSelective(${table.entityClassName} record);
+
+	int insertSelective(${table.entityClassName} record);
 
 	int insertBatch(@Param("recordList")List<${table.entityClassName}> recordList);
 
