@@ -17,13 +17,13 @@ public interface ${table.mapperClassName} {
 
 	int deleteByPrimaryKey(#set($temp=0)#foreach(${column}in${table.columnList})#if($column.isPrimaryKey())#if($temp >0),#end#set($temp=$temp+1)@Param("${column.fieldName}")${column.javaType} ${column.fieldName}#end#end);
 
-	int updateByPrimaryKey(${table.entityClassName} record);
+	int updateByPrimaryKey(${table.entityClassName} criteria);
 
-	int updateByPrimaryKeySelective(${table.entityClassName} record);
+	int updateByPrimaryKeySelective(${table.entityClassName} criteria);
 
-	int countSelective(${table.entityClassName} record);
+	int countSelective(${table.entityClassName} criteria);
 
 	${table.entityClassName} queryByPrimaryKey(#set($temp=0)#foreach(${column}in${table.columnList})#if($column.isPrimaryKey())#if($temp >0),#end#set($temp=$temp+1)@Param("${column.fieldName}")${column.javaType} ${column.fieldName}#end#end);
 
-	List<${table.entityClassName}> querySelective(${table.entityClassName} record);
+	List<${table.entityClassName}> querySelective(${table.entityClassName} criteria);
 }
